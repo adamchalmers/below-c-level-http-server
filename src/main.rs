@@ -72,8 +72,9 @@ fn handle_client(stream: TcpStream) -> Result<(), String> {
 }
 
 fn main() -> std::io::Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:8080")?;
-    println!("Listening...");
+    let addr = "127.0.0.1:8080";
+    let listener = TcpListener::bind(addr)?;
+    println!("Listening on {addr}...");
 
     // accept connections and process them serially
     for stream in listener.incoming() {
