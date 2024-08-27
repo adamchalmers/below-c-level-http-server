@@ -3,9 +3,13 @@ use std::io::{BufRead, BufReader, Read, Write};
 use std::net::{TcpListener, TcpStream};
 
 fn handle_client(stream: TcpStream) -> Result<(), String> {
-    let mut writer = stream.try_clone().unwrap();
-    let mut reader = BufReader::new(stream);
+    let writer = stream.try_clone().unwrap();
+    let reader = BufReader::new(stream);
 
+    respond(writer, reader)
+}
+
+fn respond<W: Write, R: BufRead>(mut writer: W, mut reader: R) -> Result<(), String> {
     // Parse headers
     let mut line_buf = String::new();
     reader
@@ -24,7 +28,7 @@ fn handle_client(stream: TcpStream) -> Result<(), String> {
             break;
         }
         let (k, v) = match line_buf.split_once(": ") {
-            Some((k, v)) => (k.to_owned(), v.to_owned()),
+            Some((k, v)) => (k.to_owned(), v.trim().to_owned()),
             None => return Err(format!("Invalid HTTP header {line_buf} (missing a ': ')")),
         };
         headers.insert(k, v);
