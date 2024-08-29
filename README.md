@@ -6,8 +6,14 @@
 2. Install the latest Rust + cargo (Rust's build tool): `rustup install stable`
 3. Run it: `cargo run`
 
-If you have [just](https://github.com/casey/just?tab=readme-ov-file#packages) you can run
-some common tasks e.g. `just watch` or `just run`.
+## Set up watch mode
+
+If you want to reload the server whenever the source code changes:
+
+1. Install [just] via some [package manager](https://github.com/casey/just?tab=readme-ov-file#packages)
+2. Run `just install-tools`
+
+Then you can do `just watch` to run the server, and reload it whenever your source code changes.
 
 ## HTTP structure
 
