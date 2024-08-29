@@ -80,27 +80,22 @@ fn respond<W: Write, R: BufRead>(mut writer: W, mut reader: R) -> Result<(), Str
     let headers = format!("Content-Length: {}\r\n", body_len);
     let msg = format!("{status}\r\n{headers}\r\n{body}");
     let msg_binary = msg.as_bytes();
-    let total_bytes = msg_binary.len();
-    let mut total_written = 0;
-    let mut num_writes = 0;
-    while total_written < total_bytes {
-        // Don't write more than `limit` bytes at once.
-        let write_cap = min(MAX_WRITE_LEN, body_len);
-        // Don't write more bytes than remain in the body!
-        let write_cap = min(write_cap, total_bytes - total_written);
 
-        let write_fragment = &msg_binary[total_written..total_written + write_cap];
-        let res = writer.write(write_fragment);
+    // Don't write more than `limit` bytes at once.
+    let chunk_size = min(MAX_WRITE_LEN, body_len);
+    if chunk_size == 0 {
+        return Ok(());
+    }
+    for (num_writes, response_chunk) in msg_binary.chunks(chunk_size).enumerate() {
+        let res = writer.write(response_chunk);
         match res {
             Ok(n) => {
                 println!("Wrote {n} bytes (write #{num_writes})");
-                total_written += n;
             }
             Err(e) => {
                 return Err(format!("Could not write request: {e:?}"));
             }
         }
-        num_writes += 1;
     }
     Ok(())
 }
