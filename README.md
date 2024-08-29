@@ -1,8 +1,13 @@
 # Below C Level HTTP Server
 
-## blazing fast
+## Setup
 
-# Requirements
+1. [Install Rustup](https://rustup.rs/)
+2. Install the latest Rust + cargo (Rust's build tool): `rustup install stable`
+3. Run it: `cargo run`
+
+If you have [just](https://github.com/casey/just?tab=readme-ov-file#packages) you can run
+some common tasks e.g. `just watch` or `just run`.
 
 ## HTTP structure
 
